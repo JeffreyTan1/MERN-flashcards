@@ -5,7 +5,7 @@ export const apiGetAllCards = async (req, res, next) => {
   try {
     cardResponse = await CardsDAO.getAllCards()
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
 
   let { error } = cardResponse
@@ -27,7 +27,7 @@ export const apiGetCards = async (req, res, next) => {
   try {
     cardResponse = await CardsDAO.getCards(user_id)
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
 
   let { error } = cardResponse
@@ -59,12 +59,12 @@ export const apiPostCard = async (req, res, next) => {
       date}
     )
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
 
   let { error } = cardResponse
   if (error) { return res.status(500).json({ error })}
-  return res.status(200).json({ message: "success" })
+  return res.status(200).json({ status: "success" })
 }
 
 export const apiUpdateCard = async (req, res, next) => {
@@ -89,12 +89,12 @@ export const apiUpdateCard = async (req, res, next) => {
       date}
     )
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
 
   let { error } = cardResponse
   if (error) { return res.status(500).json({ error })}
-  if (cardResponse.modifiedCount === 0) { return res.status(500).json({message: 'card not updated'})}
+  if (cardResponse.modifiedCount === 0) { return res.status(500).json({error: {message: 'card not updated'}})}
 
   return res.status(200).json({ status: "success" })
 }
@@ -114,12 +114,12 @@ export const apiDeleteCard = async (req, res, next) => {
       card_id,
     )
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
 
   let { error } = cardResponse
   if (error) { return res.status(500).json({ error })}
-  if (cardResponse.deletedCount === 0) { return res.status(500).json({message: 'card not deleted'})}
+  if (cardResponse.deletedCount === 0) { return res.status(500).json({error: {message: 'card not deleted'}})}
 
   return res.status(200).json({ status: "success" })
 }
@@ -139,7 +139,7 @@ export const apiGetCard = async (req, res, next) => {
       user_id
     )
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
   
   let { error } = cardResponse
@@ -157,14 +157,14 @@ export const checkSameCardUser = async (user_id, card_id, res) => {
   try {
     existingCard = await CardsDAO.getCard(card_id)
   } catch (e) {
-    return res.status(500).json({ error: e.message })
+    return res.status(500).json({ error: {message: e.message} })
   }
-  if (existingCard == null) { return res.status(404).json({message: 'Card does not exist'})}
-  if(existingCard.user_id != user_id) { return res.status(401).json({message: 'Unauthorized'})}
+  if (existingCard == null) { return res.status(404).json({error: {message: 'Card does not exist'}})}
+  if(existingCard.user_id != user_id) { return res.status(401).json({error: {message: 'Unauthorized'}})}
   return null
 }
 
 const checkAuthenticated = (user_id, res) => {
-  if(!user_id) return res.status(401).json({message: 'Unauthenticated'})
+  if(!user_id) return res.status(401).json({error: 'Unauthenticated'})
   return null
 }

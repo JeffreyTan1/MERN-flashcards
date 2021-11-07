@@ -61,7 +61,7 @@ export const apiPostDeck = async (req, res, next) => {
 
   let { error } = deckResponse
   if (error) { return res.status(500).json({ error })}
-  return res.status(200).json({ message: "success" })
+  return res.status(200).json({ status: "success" })
 }
 
 export const apiUpdateDeck = async (req, res, next) => {
@@ -90,7 +90,7 @@ export const apiUpdateDeck = async (req, res, next) => {
 
   let { error } = deckResponse
   if (error) { return res.status(500).json({ error })}
-  if (deckResponse.modifiedCount === 0) { return res.status(500).json({message: 'deck not updated'})}
+  if (deckResponse.modifiedCount === 0) { return res.status(500).json({error: 'deck not updated'})}
 
   return res.status(200).json({ status: "success" })
 }
@@ -115,7 +115,7 @@ export const apiDeleteDeck = async (req, res, next) => {
 
   let { error } = deckResponse
   if (error) { return res.status(500).json({ error })}
-  if (deckResponse.deletedCount === 0) { return res.status(500).json({message: 'Deck not deleted'})}
+  if (deckResponse.deletedCount === 0) { return res.status(500).json({error: 'Deck not deleted'})}
 
   return res.status(200).json({ status: "success" })
 }
@@ -147,7 +147,7 @@ export const apiEditCards = async (req, res, next) => {
   }
   let { error } = deckResponse
   if (error) { return res.status(500).json({ error })}
-  if (deckResponse.modifiedCount === 0) { return res.status(500).json({message: 'Deck not updated'})}
+  if (deckResponse.modifiedCount === 0) { return res.status(500).json({error: 'Deck not updated'})}
 
   return res.status(200).json({ status: "success" })
 }
@@ -184,12 +184,12 @@ const checkSameDeckUser = async (user_id, deck_id, res) => {
   } catch (e) {
     return res.status(500).json({ error: e.message })
   }
-  if (existingDeck == null) { return res.status(404).json({message: 'Deck does not exist'})}
-  if(existingDeck.user_id != user_id) { return res.status(401).json({message: 'Unauthorized'})}
+  if (existingDeck == null) { return res.status(404).json({error: 'Deck does not exist'})}
+  if(existingDeck.user_id != user_id) { return res.status(401).json({error: 'Unauthorized'})}
   return null
 }
 
 const checkAuthenticated = (user_id, res) => {
-  if(!user_id) return res.status(401).json({message: 'Unauthenticated'})
+  if(!user_id) return res.status(401).json({error: 'Unauthenticated'})
   return null
 }

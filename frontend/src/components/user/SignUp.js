@@ -1,9 +1,10 @@
-import React from "react";
+import React, {useState} from "react";
 import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Link } from "react-router-dom";
-
+import { signUp } from "../../actions/userActions";
+import { useHistory } from "react-router";
 const schema = yup.object({
   email: yup.string().email(),
   password: yup.string().required().min(8).matches(
@@ -18,9 +19,18 @@ function SignUp() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
+
+  const [error, setError] = useState('')
+  const history = useHistory()
+
   const onSubmit = data => {
-    console.log(data)
-    
+    signUp(data).then((res) => {
+      console.log(res.data.status)
+      history.push('/login')}
+    ).catch((error) => {
+      console.log(error.message)
+      setError(error.message)
+    }) 
   };
 
   return (
@@ -45,7 +55,9 @@ function SignUp() {
             <input name="confirmPassword" className="form-control" type="password" {...register("confirmPassword")} />
             <p>{errors.confirmPassword?.message}</p>
           </div>
-
+          <div className="form-group">
+            <p>{error}</p>
+          </div>
           <div className="form-group">
             <input className="btn btn-primary mr-2" type="submit" />
           </div>

@@ -1,26 +1,66 @@
 import {API} from "../http-common"
 
 export const getAll = async () => {
-  return API.get(`decks/`);
+  try {
+    const res = await API.get(`decks/`);
+    return res;
+
+  } catch (error) {
+    const errorMessage = error.response.data.error.message;
+    throw Error(errorMessage);
+  }
 }
 
 export const create = async (data) => {
-  return API.post(`decks/create`, data);
+  try {
+    const res = await API.post(`decks/create`, data);
+    return res
+
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
+
 }
 
 export const update = async (data) => {
-  return API.put(`decks/update`, data);
+  try {
+    const res = await API.put(`decks/update`, data);
+    return res
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
 }
 
 export const del = async (data) => {
-  return API.delete(`decks/delete`, data);
+  try {
+    const res = await API.delete(`decks/delete`, data);
+    return res;
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
 }
 
 export const edit = async (data) => {
-  return API.put(`decks/edit`, data);
+  try {
+    const res = await API.put(`decks/edit`, data);
+    return res
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
 }
 
 export const getDeck = async (data) => {
-  return API.get(`decks/deck`, data);
+  try {
+    const res = await API.get(`decks/deck`, data);
+    return res;
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
+
 }
 

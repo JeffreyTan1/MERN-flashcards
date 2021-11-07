@@ -3,6 +3,8 @@ import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import { Link } from "react-router-dom";
+import {login} from "./../../actions/userActions"
+import { useHistory } from "react-router";
 
 const schema = yup.object({
   email: yup.string().email(),
@@ -14,7 +16,13 @@ function Login() {
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema)
   });
-  const onSubmit = data => console.log(data);
+
+  const history = useHistory()
+  const onSubmit = (data) => {
+    login(data).then(
+      history.push('/')
+    )
+  }
 
   return (
     <div className="container">

@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 import { userStates } from './redux/user';
 
 function App() {
-  const userState = useSelector((state) => state.user)
+  const userState = useSelector((state) => state.user.value)
 
   return (
       <Router>

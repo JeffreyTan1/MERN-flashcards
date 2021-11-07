@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import {Stack, Collection} from 'react-bootstrap-icons'
 import decode from 'jwt-decode';
 import {logout} from './../../actions/userActions'
@@ -9,7 +9,6 @@ function Navbar() {
   const location = useLocation();
 
   useEffect(() => {
-    console.log("navbar expired token check")
     const token = user?.token;
     if (token) {
       const decodedToken = decode(token);
@@ -44,7 +43,7 @@ function Navbar() {
                 {user?.result ? (
                   <li className="nav-item">
                     {/* logout should push login so no to prop here */}
-                    <Link className="nav-link" onClick={logout}>Logout</Link>
+                    <Link className="nav-link" to="/" onClick={logout}>Logout</Link>
                   </li>
                 ) : (
                   <li className="nav-item">

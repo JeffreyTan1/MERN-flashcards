@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 
 export const userStates = {
   LOGGED_IN: 'logged in',
@@ -13,11 +13,11 @@ export const userSlice = createSlice({
   reducers: {
     loginReducer: (state, action) => {
       localStorage.setItem('user', JSON.stringify(action.payload))
-      state = userStates.LOGGED_IN
+      state.value = userStates.LOGGED_IN
     },
     logoutReducer: (state) => {
       localStorage.setItem('user', null)
-      state = userStates.LOGGED_OUT
+      state.value = userStates.LOGGED_OUT
     },
   },
 })
