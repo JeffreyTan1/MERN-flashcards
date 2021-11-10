@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { DecksTable } from './DecksTable';
+import DecksTable from './DecksTable';
 
 function Decks() {
     return (

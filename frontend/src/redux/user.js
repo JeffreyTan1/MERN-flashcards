@@ -12,12 +12,12 @@ export const userSlice = createSlice({
   },
   reducers: {
     loginReducer: (state, action) => {
-      localStorage.setItem('user', JSON.stringify(action.payload))
-      state.value = userStates.LOGGED_IN
+      state.user = userStates.LOGGED_IN
+      state.value = action.payload
     },
     logoutReducer: (state) => {
-      localStorage.setItem('user', null)
-      state.value = userStates.LOGGED_OUT
+      state.user = userStates.LOGGED_OUT
+      state.value = null
     },
   },
 })

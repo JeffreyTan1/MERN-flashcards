@@ -8,6 +8,7 @@ export const login = async (data) => {
     store.dispatch(loginReducer(res.data));
     return res;
   } catch (error) {
+    console.log(error)
     const errorMessage = error.response.data.error.message
     throw Error(errorMessage)
   }

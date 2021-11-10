@@ -71,7 +71,7 @@ export default class CardsDAO {
     }
   }
 
-  static async getCard(card_id) {
+  static async getOne(card_id) {
     let card
     try {
       card = await cards

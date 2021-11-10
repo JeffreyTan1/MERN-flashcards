@@ -19,10 +19,6 @@ export const apiGetAllCards = async (req, res, next) => {
 
 export const apiGetCards = async (req, res, next) => {
   const user_id = req.user_id
-
-  const unauthenticatedMsg = checkAuthenticated(user_id, res)
-  if (unauthenticatedMsg != null) {return unauthenticatedMsg}
-
   let cardResponse = null;
   try {
     cardResponse = await CardsDAO.getCards(user_id)
@@ -46,9 +42,6 @@ export const apiPostCard = async (req, res, next) => {
   const tags = req.body.tags
   const date = new Date()
 
-  const unauthenticatedMsg = checkAuthenticated(user_id, res)
-  if (unauthenticatedMsg != null) {return unauthenticatedMsg}
-
   let cardResponse = null;
   try {
     cardResponse = await CardsDAO.addCard(
@@ -68,17 +61,12 @@ export const apiPostCard = async (req, res, next) => {
 }
 
 export const apiUpdateCard = async (req, res, next) => {
-  const user_id = req.user_id
   const card_id = req.body.card_id
   const front = req.body.front
   const back = req.body.back
   const tags = req.body.tags
   const date = new Date()
 
-  const unauthenticatedMsg = checkAuthenticated(user_id, res)
-  if (unauthenticatedMsg != null) {return unauthenticatedMsg}
-  const diffUserMsg = await checkSameCardUser(user_id, card_id, res)
-  if (diffUserMsg != null) { return diffUserMsg }
   let cardResponse = null;
   try {
     cardResponse = await CardsDAO.updateCard(
@@ -100,13 +88,7 @@ export const apiUpdateCard = async (req, res, next) => {
 }
 
 export const apiDeleteCard = async (req, res, next) => {
-  const user_id = req.user_id
   const card_id = req.body.card_id
-
-  const unauthenticatedMsg = checkAuthenticated(user_id, res)
-  if (unauthenticatedMsg != null) {return unauthenticatedMsg}
-  const diffUserMsg = await checkSameCardUser(user_id, card_id, res)
-  if (diffUserMsg != null) {return diffUserMsg}
 
   let cardResponse = null;
   try {
@@ -125,46 +107,21 @@ export const apiDeleteCard = async (req, res, next) => {
 }
 
 export const apiGetCard = async (req, res, next) => {
-  const user_id = res.user_id
-  const card_id = res.body.card_id
+  const card_id = req.params.card_id
 
-  const unauthenticatedMsg = checkAuthenticated(user_id, res)
-  if (unauthenticatedMsg != null) {return unauthenticatedMsg}
-  const diffUserMsg = await checkSameCardUser(user_id, card_id, res)
-  if (diffUserMsg != null) {return diffUserMsg}
-
+  let cardResponse = null
   try {
-    const { card } = await CardsDAO.getCard(
+    cardResponse = await CardsDAO.getOne(
       card_id,
-      user_id
     )
+    console.log(cardResponse)
   } catch (e) {
     return res.status(500).json({ error: {message: e.message} })
   }
-  
-  let { error } = cardResponse
-  if (error) { return res.status(500).json({ error })}
 
   let response = {
-    card: card,
+    card: cardResponse,
   }
 
   return res.status(200).json(response)
-}
-
-export const checkSameCardUser = async (user_id, card_id, res) => {
-  let existingCard = null;
-  try {
-    existingCard = await CardsDAO.getCard(card_id)
-  } catch (e) {
-    return res.status(500).json({ error: {message: e.message} })
-  }
-  if (existingCard == null) { return res.status(404).json({error: {message: 'Card does not exist'}})}
-  if(existingCard.user_id != user_id) { return res.status(401).json({error: {message: 'Unauthorized'}})}
-  return null
-}
-
-const checkAuthenticated = (user_id, res) => {
-  if(!user_id) return res.status(401).json({error: 'Unauthenticated'})
-  return null
 }

@@ -1,21 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import {Stack, Collection} from 'react-bootstrap-icons'
-import decode from 'jwt-decode';
 import {logout} from './../../actions/userActions'
+import { useSelector } from 'react-redux';
+import { userStates } from '../../redux/user';
 
 function Navbar() {
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
-  const location = useLocation();
-
-  useEffect(() => {
-    const token = user?.token;
-    if (token) {
-      const decodedToken = decode(token);
-      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
-    }
-    setUser(JSON.parse(localStorage.getItem('user')));
-  }, [location, user?.token]);
+  const userState = useSelector((state) => state.user);
   
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -40,9 +31,8 @@ function Navbar() {
                         <Collection/>
                     </Link>
                 </li>
-                {user?.result ? (
+                {userState.user === userStates.LOGGED_IN ? (
                   <li className="nav-item">
-                    {/* logout should push login so no to prop here */}
                     <Link className="nav-link" to="/" onClick={logout}>Logout</Link>
                   </li>
                 ) : (

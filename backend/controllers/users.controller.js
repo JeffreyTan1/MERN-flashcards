@@ -37,9 +37,9 @@ export const apiPostSignUp= async (req, res, next) => {
 
     const result = await UsersDAO.addUser({email, hashedPassword})
 
-    if(result) {res.status(200).json({status: "User successfully created"}) }
+    if(result) {return res.status(200).json({status: "User successfully created"}) }
     else {throw Error}
   } catch (error) {
-    res.status(500).json({error: "Something went wrong."}) 
+    return res.status(500).json({error: "Something went wrong."}) 
   }
 }

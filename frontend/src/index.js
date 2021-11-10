@@ -8,16 +8,23 @@ import reportWebVitals from './reportWebVitals';
 import { QueryClientProvider, QueryClient } from 'react-query'
 import store from './redux/store';
 import { Provider } from 'react-redux';
-
+import { PersistGate } from 'redux-persist/integration/react'
+import {persistStore} from 'redux-persist'
+import {BrowserRouter as Router} from 'react-router-dom'
+const persistor = persistStore(store);
 const queryClient = new QueryClient()
 
 ReactDOM.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <QueryClientProvider client={queryClient}>
-        <App />
-      </QueryClientProvider>
-    </Provider>
+    <Router>
+      <Provider store={store}>
+        <QueryClientProvider client={queryClient}>
+          <PersistGate loading={null} persistor={persistor}> 
+            <App />
+          </PersistGate>
+        </QueryClientProvider>
+      </Provider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );

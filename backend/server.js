@@ -6,6 +6,7 @@ import users from "./routes/users.route.js"
 import morgan from "morgan"
 
 const app = express()
+app.disable('etag');
 
 app.use(cors())
 app.use(morgan('dev'))

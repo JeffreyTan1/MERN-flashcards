@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {useForm} from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
@@ -18,10 +18,15 @@ function Login() {
   });
 
   const history = useHistory()
+  const [error, setError] = useState('')
   const onSubmit = (data) => {
-    login(data).then(
-      history.push('/')
-    )
+    login(data)
+    .then((res) => {
+      history.push('/')}
+    ).catch((error) => {
+      console.log(error.message)
+      setError(error.message)
+    }) 
   }
 
   return (
@@ -39,6 +44,10 @@ function Login() {
             <label htmlFor="password">Password</label>
             <input name="password" className="form-control" type="password" {...register("password")} />
             <p>{errors.password?.message}</p>
+          </div>
+
+          <div className="form-group">
+            <p>{error}</p>
           </div>
 
           <div className="form-group">

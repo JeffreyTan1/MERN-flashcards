@@ -1,8 +1,8 @@
 import {API} from "../http-common"
 
-export const getAll = async () => {
+export const getAllDecks = async () => {
   try {
-    const res = await API.get(`decks/`);
+    const res = await API.get(`decks/all`);
     return res;
 
   } catch (error) {
@@ -11,7 +11,18 @@ export const getAll = async () => {
   }
 }
 
-export const create = async (data) => {
+export const getDecks = async () => {
+  try {
+    const res = await API.get(`decks/decks`);
+    return res;
+
+  } catch (error) {
+    const errorMessage = error.response.data.error.message;
+    throw Error(errorMessage);
+  }
+}
+
+export const createDeck = async (data) => {
   try {
     const res = await API.post(`decks/create`, data);
     return res
@@ -23,7 +34,7 @@ export const create = async (data) => {
 
 }
 
-export const update = async (data) => {
+export const updateDeck = async (data) => {
   try {
     const res = await API.put(`decks/update`, data);
     return res
@@ -33,9 +44,10 @@ export const update = async (data) => {
   }
 }
 
-export const del = async (data) => {
+export const deleteDeck = async (data) => {
   try {
-    const res = await API.delete(`decks/delete`, data);
+    console.log(data)
+    const res = await API.delete(`decks/delete`, {data: {deck_id: data.deck_id}});
     return res;
   } catch (error) {
     const errorMessage = error.response.data.error.message
@@ -43,7 +55,7 @@ export const del = async (data) => {
   }
 }
 
-export const edit = async (data) => {
+export const editDeck = async (data) => {
   try {
     const res = await API.put(`decks/edit`, data);
     return res
@@ -53,9 +65,9 @@ export const edit = async (data) => {
   }
 }
 
-export const getDeck = async (data) => {
+export const getDeck = async (id) => {
   try {
-    const res = await API.get(`decks/deck`, data);
+    const res = await API.get(`decks/deck/` + id);
     return res;
   } catch (error) {
     const errorMessage = error.response.data.error.message

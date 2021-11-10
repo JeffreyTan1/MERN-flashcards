@@ -6,3 +6,8 @@
 .narrow-form {
   width: 50%;
 }
+
+.table-list {
+  list-style: circle;
+  padding-left: 0rem;
+}

@@ -1,14 +1,16 @@
-import React, {useState} from 'react'
-import { useHistory } from 'react-router';
+import React, {useState, useEffect} from 'react'
+import { useHistory, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
-import { createCard } from '../../actions/cardActions';
+import { getCard, updateCard } from '../../actions/cardActions';
 
-export function AddCard ({props}) {
+export function EditCard () {
+  const {id} = useParams();
+  const [card, setCard] = useState({})
 
   const schema = yup.object().shape({
-    front: yup.string().min(3, 'must be at least 3 characters').required(),
+    front: yup.string().required(),
     tags: yup.array().of(
       yup.object().shape({
         value: yup.string().min(1, 'must be at least 3 characters')
@@ -17,17 +19,37 @@ export function AddCard ({props}) {
       })
     )
   })
-  const { register, control, handleSubmit, formState: { errors } } = useForm({
+  
+  const { register, control, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    getCard(id).then((res) => {
+      let data = (res.data.card)
+      setCard(data)
+      const tags = data.tags.map(tag => ({value: tag}))
+      const values = {
+        front: data.front,
+        back: data.back,
+        tags: tags
+      }
+      reset(values)
+    }).catch((error) => {
+      console.error(error.message)
+    }
+    )
+  }, [id, reset])
+
   const {fields, append, remove} = useFieldArray({name: 'tags', control})
 
   const history = useHistory()
   const [error, setError] = useState('')
+
   const onSubmit = (data) => {
     data.tags = data.tags.map(tag => tag.value)
-    console.log(data)
-    createCard(data).then((res) => {
+    data.card_id = card._id
+    updateCard(data).then((res) => {
       console.log(res.data.status)
       history.push('/cards')
     }).catch((error) => {
@@ -38,7 +60,7 @@ export function AddCard ({props}) {
 
   return (
     <div className="container">
-      <h1>Add Card</h1>
+      <h1>Edit Card</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
           <label htmlFor="front">Front</label>

@@ -1,14 +1,16 @@
-import React, {useState} from 'react'
-import { useHistory } from 'react-router';
+import React, {useState, useEffect} from 'react'
+import { useHistory, useParams } from 'react-router';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
-import { createCard } from '../../actions/cardActions';
+import { getDeck, updateDeck } from '../../actions/deckActions';
 
-export function AddCard ({props}) {
+export function EditDeck () {
+  const {id} = useParams();
+  const [deck, setDeck] = useState({})
 
   const schema = yup.object().shape({
-    front: yup.string().min(3, 'must be at least 3 characters').required(),
+    name: yup.string().min(3, 'must be at least 3 characters').required(),
     tags: yup.array().of(
       yup.object().shape({
         value: yup.string().min(1, 'must be at least 3 characters')
@@ -17,19 +19,38 @@ export function AddCard ({props}) {
       })
     )
   })
-  const { register, control, handleSubmit, formState: { errors } } = useForm({
+  
+  const { register, control, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: yupResolver(schema)
   });
+
+  useEffect(() => {
+    getDeck(id).then((res) => {
+      let data = (res.data.deck)
+      setDeck(data)
+      const tags = data.tags.map(tag => ({value: tag}))
+      const values = {
+        name: data.name,
+        tags: tags
+      }
+      reset(values)
+    }).catch((error) => {
+      console.error(error.message)
+    }
+    )
+  }, [id, reset])
+
   const {fields, append, remove} = useFieldArray({name: 'tags', control})
 
   const history = useHistory()
   const [error, setError] = useState('')
+
   const onSubmit = (data) => {
     data.tags = data.tags.map(tag => tag.value)
-    console.log(data)
-    createCard(data).then((res) => {
+    data.deck_id = deck._id
+    updateDeck(data).then((res) => {
       console.log(res.data.status)
-      history.push('/cards')
+      history.push('/decks')
     }).catch((error) => {
       console.log(error.message)
       setError(error.message)
@@ -38,18 +59,12 @@ export function AddCard ({props}) {
 
   return (
     <div className="container">
-      <h1>Add Card</h1>
+      <h1>Edit Deck</h1>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="form-group">
-          <label htmlFor="front">Front</label>
-          <textarea name="front" className="form-control"  {...register("front")} />
-          <p>{errors.front?.message}</p>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="back">Back</label>
-          <textarea name="back" className="form-control" type="text" {...register("back")} />
-          <p>{errors.back?.message}</p>
+          <label htmlFor="name">Name</label>
+          <input name="name" className="form-control" type="text" {...register("name")} />
+          <p>{errors.name?.message}</p>
         </div>
 
         <div className="form-group">

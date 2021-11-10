@@ -1,8 +1,8 @@
 import {API} from "../http-common"
 
-export const getAll= () => {
+export const getAllCards = async () => {
   try {
-    const res = API.get(`cards/`);
+    const res = await API.get(`cards/all`);
     return res;
 
   } catch (error) {
@@ -11,9 +11,9 @@ export const getAll= () => {
   }
 }
 
-export const create= (data) => {
+export const getCards = async () => {
   try {
-    const res = API.post(`cards/create`, data);
+    const res = await API.get(`cards/cards`);
     return res;
 
   } catch (error) {
@@ -22,9 +22,9 @@ export const create= (data) => {
   }
 }
 
-export const update= (data) => {
+export const createCard = async (data) => {
   try {
-    const res = API.put(`cards/update`, data);
+    const res = await API.post(`cards/create`, data);
     return res;
 
   } catch (error) {
@@ -33,9 +33,9 @@ export const update= (data) => {
   }
 }
 
-export const del = (data) => {
+export const updateCard = async (data) => {
   try {
-    const res = API.delete(`cards/delete`, data);
+    const res = await API.put(`cards/update`, data);
     return res;
 
   } catch (error) {
@@ -44,3 +44,23 @@ export const del = (data) => {
   }
 }
 
+export const deleteCard = async (data) => {
+  try {
+    const res = await API.delete(`cards/delete`, {data: {card_id: data.card_id}});
+    return res;
+
+  } catch (error) {
+    const errorMessage = error.response.data.error.message;
+    throw Error(errorMessage);
+  }
+}
+
+export const getCard = async (id) => {
+  try {
+    const res = await API.get(`cards/card/` + id);
+    return res;
+  } catch (error) {
+    const errorMessage = error.response.data.error.message;
+    throw Error(errorMessage);
+  }
+}

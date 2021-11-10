@@ -78,7 +78,7 @@ export default class DecksDAO {
     
   }
 
-  static async getDeck(deck_id) {
+  static async getOne(deck_id) {
     let deck
     try {
       deck = await decks
