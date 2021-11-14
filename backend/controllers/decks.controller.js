@@ -85,10 +85,7 @@ export const apiUpdateDeck = async (req, res, next) => {
 }
 
 export const apiDeleteDeck = async (req, res, next) => {
-  console.log(req)
   const deck_id = req.body.deck_id
-  console.log(deck_id)
-
   let deckResponse = null;
   try {      
     deckResponse = await DecksDAO.deleteDeck(
@@ -150,8 +147,6 @@ export const apiGetArrayDecks = async (decksArray, req, res, next) => {
   let response = {
     decks: deckResponse.decksList,
   }
-
-  console.log(response)
 
   return res.status(200).json(response)
 }

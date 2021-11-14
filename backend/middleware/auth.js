@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken'
 const auth = async (req, res, next) => {
   try {
     const [bearer, token] = req.headers.authorization?.split(" ");
-    // console.log(bearer, token)
     let decodedData;
     if(token && bearer == `Bearer`) {
       try {

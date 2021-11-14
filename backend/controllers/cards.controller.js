@@ -131,7 +131,6 @@ export const apiGetCard = async (req, res, next) => {
     cardResponse = await CardsDAO.getOne(
       card_id,
     )
-    console.log(cardResponse)
   } catch (e) {
     return res.status(500).json({ error: {message: e.message} })
   }
@@ -158,7 +157,6 @@ export const apiGetArrayCards = async (cardsArray, req, res, next) => {
     cards: cardResponse.cardsList,
   }
 
-  console.log(response)
 
   return res.status(200).json(response)
 }
