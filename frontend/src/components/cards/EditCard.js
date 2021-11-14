@@ -5,7 +5,7 @@ import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
 import { getCard, updateCard } from '../../actions/cardActions';
 
-export function EditCard () {
+export default function EditCard () {
   const {id} = useParams();
   const [card, setCard] = useState({})
 

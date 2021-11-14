@@ -5,7 +5,7 @@ import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
 import { getDeck, updateDeck } from '../../actions/deckActions';
 
-export function EditDeck () {
+export default function EditDeck () {
   const {id} = useParams();
   const [deck, setDeck] = useState({})
 

@@ -9,11 +9,8 @@ const sameUser = async (req, res, next) => {
   // do a check if both do not return error
   const cardResponse = await doCheck(user_id, card_id, CardsDAO, 'Card', res)
   if(cardResponse) {return cardResponse}
-  console.log('user-card check success')
   const deckResponse = await doCheck(user_id, deck_id, DecksDAO, 'Deck', res)
   if(deckResponse) {return deckResponse}
-  console.log('user-deck check success')
-
   next()
 }
 

@@ -1,4 +1,6 @@
 import CardsDAO from "../dao/cardsDAO.js"
+import { apiGetDeckCards, apiGetArrayDecks } from "./decks.controller.js";
+import { apiEdit } from "./common.controller.js";
 
 export const apiGetAllCards = async (req, res, next) => {
   let cardResponse = null;
@@ -41,7 +43,7 @@ export const apiPostCard = async (req, res, next) => {
   const back = req.body.back
   const tags = req.body.tags
   const date = new Date()
-
+  const decks = []
   let cardResponse = null;
   try {
     cardResponse = await CardsDAO.addCard(
@@ -49,6 +51,7 @@ export const apiPostCard = async (req, res, next) => {
       front,
       back,
       tags,
+      decks,
       date}
     )
   } catch (e) {
@@ -57,7 +60,7 @@ export const apiPostCard = async (req, res, next) => {
 
   let { error } = cardResponse
   if (error) { return res.status(500).json({ error })}
-  return res.status(200).json({ status: "success" })
+  return res.status(200).json({ status: "success", document: cardResponse })
 }
 
 export const apiUpdateCard = async (req, res, next) => {
@@ -90,7 +93,21 @@ export const apiUpdateCard = async (req, res, next) => {
 export const apiDeleteCard = async (req, res, next) => {
   const card_id = req.body.card_id
 
-  let cardResponse = null;
+  let cardResponse = null
+  try {
+    cardResponse = await CardsDAO.getOne(
+      card_id
+    )
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+
+  cardResponse.decks?.forEach(element => {
+    req.deck_id = element
+    req.addingTo = false
+    apiEdit(req,res,next)
+  });
+
   try {
       cardResponse = await CardsDAO.deleteCard(
       card_id,
@@ -124,4 +141,39 @@ export const apiGetCard = async (req, res, next) => {
   }
 
   return res.status(200).json(response)
+}
+
+export const apiGetArrayCards = async (cardsArray, req, res, next) => {
+  let cardResponse = null;
+  try {
+    cardResponse = await CardsDAO.getArrayCards(cardsArray)
+  } catch (e) {
+    return res.status(500).json({ error: {message: e.message} })
+  }
+
+  let { error } = cardResponse
+  if (error) { return res.status(500).json({ error })}
+
+  let response = {
+    cards: cardResponse.cardsList,
+  }
+
+  console.log(response)
+
+  return res.status(200).json(response)
+}
+
+
+
+export const apiGetCardDecks = async (req, res, next) => {
+  const card_id = req.params.card_id
+  let cardResponse = null
+  try {
+    cardResponse = await CardsDAO.getOne(
+      card_id
+    )
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+  apiGetArrayDecks(cardResponse.decks, req, res, next)
 }

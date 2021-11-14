@@ -3,9 +3,9 @@ import { Switch, Route, Redirect, useLocation, useHistory} from "react-router-do
 import Navbar from './components/layout/Navbar';
 import Landing from './components/Landing';
 import Decks from './components/decks/Decks';
-import { AddDeck } from './components/decks/AddDeck';
+import AddDeck from './components/decks/AddDeck';
 import Cards from './components/cards/Cards';
-import { AddCard } from './components/cards/AddCard';
+import AddCard from './components/cards/AddCard';
 import Login from './components/user/Login';
 import SignUp from './components/user/SignUp';
 import React from 'react';
@@ -14,10 +14,11 @@ import { userStates } from './redux/user';
 import decode from 'jwt-decode';
 import {useEffect} from 'react';
 import {logout} from './actions/userActions'
-import { EditCard } from './components/cards/EditCard';
-import { Play } from './components/decks/Play';
-import { EditDeck } from './components/decks/EditDeck';
-
+import EditCard from './components/cards/EditCard';
+import Play from './components/decks/Play';
+import EditDeck from './components/decks/EditDeck';
+import ManageDeck from './components/decks/ManageDeck';
+import ManageCard from './components/cards/ManageCard';
 
 function App() {
   const location = useLocation();
@@ -31,6 +32,7 @@ function App() {
       if (decodedToken.exp * 1000 < new Date().getTime()) {
         logout()
         history.push('/login')
+        alert('Your token has expired. Please login')
       };
     }
   }, [history, location, userState?.value?.token]);
@@ -42,7 +44,6 @@ function App() {
       </Route>
     )
   }
-
   
   return (
     
@@ -59,7 +60,9 @@ function App() {
             {createProtected("/cards", Cards, "/login")}
             {createProtected("/addCard", AddCard, "/login")}
             {createProtected("/cards/edit/:id", EditCard, "/login")}
+            {createProtected("/cards/manage/:id", ManageCard, "/login")}
             {createProtected("/decks/edit/:id", EditDeck, "/login")}
+            {createProtected("/decks/manage/:id", ManageDeck, "/login")}
             {createProtected("/decks/play/:id", Play, "/login")}
             <Route exact path="/login">
               <Login/>

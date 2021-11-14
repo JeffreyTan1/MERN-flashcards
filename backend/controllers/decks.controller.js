@@ -1,4 +1,5 @@
 import DecksDAO from "../dao/decksDAO.js"
+import { apiGetArrayCards } from "./cards.controller.js";
 
 export const apiGetAllDecks = async (req, res, next) => {
   let deckResponse = null;
@@ -104,30 +105,6 @@ export const apiDeleteDeck = async (req, res, next) => {
   return res.status(200).json({ status: "success" })
 }
 
-export const apiEditCards = async (req, res, next) => {
-  const deck_id = req.body.deck_id
-  const card_id = req.body.card_id
-  const addingTo = req.body.addingTo
-  const date = new Date()
-
-  let deckResponse = null;
-  try {
-    deckResponse = await DecksDAO.editCards(
-      {deck_id,
-      card_id,
-      addingTo,
-      date}
-    )
-  } catch (e) {
-    return res.status(500).json({ error: e.message })
-  }
-  let { error } = deckResponse
-  if (error) { return res.status(500).json({ error })}
-  if (deckResponse.modifiedCount === 0) { return res.status(500).json({error: 'Deck not updated'})}
-
-  return res.status(200).json({ status: "success" })
-}
-
 export const apiGetDeck = async (req, res, next) => {
   const deck_id = req.params.deck_id
   let deckResponse = null
@@ -146,5 +123,35 @@ export const apiGetDeck = async (req, res, next) => {
   return res.status(200).json(response)
 }
 
+export const apiGetDeckCards = async (req, res, next) => {
+  const deck_id = req.params.deck_id
+  let deckResponse = null
+  try {
+    deckResponse = await DecksDAO.getOne(
+      deck_id
+    )
+  } catch (e) {
+    return res.status(500).json({ error: e.message })
+  }
+  apiGetArrayCards(deckResponse.cards, req, res, next)
+}
 
+export const apiGetArrayDecks = async (decksArray, req, res, next) => {
+  let deckResponse = null;
+  try {
+    deckResponse = await DecksDAO.getArrayDecks(decksArray)
+  } catch (e) {
+    return res.status(500).json({ error: {message: e.message} })
+  }
 
+  let { error } = deckResponse
+  if (error) { return res.status(500).json({ error })}
+
+  let response = {
+    decks: deckResponse.decksList,
+  }
+
+  console.log(response)
+
+  return res.status(200).json(response)
+}

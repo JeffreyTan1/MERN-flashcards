@@ -4,8 +4,9 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
 import { createCard } from '../../actions/cardActions';
+import { editDeck } from '../../actions/deckActions';
 
-export function AddCard ({props}) {
+export default function AddCard ({deck_id}) {
 
   const schema = yup.object().shape({
     front: yup.string().min(3, 'must be at least 3 characters').required(),
@@ -22,14 +23,29 @@ export function AddCard ({props}) {
   });
   const {fields, append, remove} = useFieldArray({name: 'tags', control})
 
-  const history = useHistory()
   const [error, setError] = useState('')
+  const history = useHistory();
+
   const onSubmit = (data) => {
     data.tags = data.tags.map(tag => tag.value)
+    data.addingTo = true
     console.log(data)
+    let documentID = null
     createCard(data).then((res) => {
       console.log(res.data.status)
+      documentID = res.data.document.insertedId
+      if (deck_id) {
+        const addCardData = {deck_id: deck_id, card_id: documentID, addingTo: true}
+        editDeck(addCardData).then((res) => {
+          console.log(res.data.status)
+        }).catch((error) => {
+          console.error(error.message)
+          setError(error.message)
+        })
+        window.location.reload(false);
+      }
       history.push('/cards')
+      
     }).catch((error) => {
       console.log(error.message)
       setError(error.message)

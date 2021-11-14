@@ -36,7 +36,7 @@ export default class DecksDAO {
   static async editCards({deck_id, card_id, addingTo, date}){
     let deck = null
     try {
-      deck = await this.getDeck(deck_id)
+      deck = await this.getOne(deck_id)
     } catch (e) {
       console.error(`Deck does not exist: ${e}`)
       return { error: e }
@@ -154,5 +154,24 @@ export default class DecksDAO {
     }
   }
 
+  static async getArrayDecks(decksArray) {
+    const decksIDs = decksArray.map(deck => ObjectId(deck))
+    let cursor
+    try {
+      cursor = await decks
+        .find({ _id : { $in : decksIDs } })
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return { error: e }
+    }
+
+    try {
+      const decksList = await cursor.toArray()
+      return { decksList }
+    } catch (e) {
+      console.error(`Unable to convert cursor to array, ${e}`)
+      return { error: e }
+    }
+  }
 
 }

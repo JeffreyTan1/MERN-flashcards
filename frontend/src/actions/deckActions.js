@@ -76,3 +76,14 @@ export const getDeck = async (id) => {
 
 }
 
+export const getDeckCards = async (id) => {
+  try {
+    const res = await API.get(`decks/deck/cards/` + id);
+    return res;
+  } catch (error) {
+    const errorMessage = error.response.data.error.message
+    throw Error(errorMessage)
+  }
+
+}
+

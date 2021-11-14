@@ -12,7 +12,7 @@ export const apiPostLogin= async (req, res, next) => {
     const isPasswordCorrect = await bcrypt.compare(password, existingUser.password);
     if (!isPasswordCorrect) {return res.status(400).json({error: "Invalid credentials" })};
 
-    const token = jwt.sign({ email: existingUser.email, _id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ email: existingUser.email, _id: existingUser._id }, process.env.JWT_SECRET, { expiresIn: "2h" });
     
     return res.status(200).json({result: existingUser, token}) 
   } catch (error) {

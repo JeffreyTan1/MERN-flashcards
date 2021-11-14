@@ -5,7 +5,7 @@ import * as yup from "yup";
 import {useFieldArray, useForm} from 'react-hook-form'
 import { createDeck } from '../../actions/deckActions';
 
-export function AddDeck ({props}) {
+export default function AddDeck ({props}) {
 
   const schema = yup.object().shape({
     name: yup.string().min(3, 'must be at least 3 characters').required(),

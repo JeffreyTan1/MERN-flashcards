@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import {Stack, Collection} from 'react-bootstrap-icons'
+import {Stack, Collection, BoxArrowInRight, BoxArrowInLeft} from 'react-bootstrap-icons'
 import {logout} from './../../actions/userActions'
 import { useSelector } from 'react-redux';
 import { userStates } from '../../redux/user';
@@ -33,11 +33,17 @@ function Navbar() {
                 </li>
                 {userState.user === userStates.LOGGED_IN ? (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/" onClick={logout}>Logout</Link>
+                    <Link className="nav-link" to="/" onClick={logout}>
+                      Logout
+                      <BoxArrowInLeft/>
+                    </Link>
                   </li>
                 ) : (
                   <li className="nav-item">
-                    <Link className="nav-link" to="/login">Login</Link>
+                    <Link className="nav-link" to="/login">
+                      Login
+                      <BoxArrowInRight/>  
+                    </Link>
                   </li>
                 )}
             </ul>

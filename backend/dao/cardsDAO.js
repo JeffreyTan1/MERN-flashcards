@@ -16,13 +16,14 @@ export default class CardsDAO {
     }
   }
 
-  static async addCard({user_id, front, back, tags, date}){
+  static async addCard({user_id, front, back, tags, decks, date}){
     const cardDoc = {
       user_id: user_id,
       front: front,
       back: back,
       tags: tags, // array of tags
-      date: date
+      decks: decks,
+      date: date,
     }
     try {  
       return await cards.insertOne(cardDoc)
@@ -107,5 +108,71 @@ export default class CardsDAO {
       return { error: e }
     }
   }
+
+  static async getArrayCards(cardsArray) {
+    const cardsIDs = cardsArray.map(card => ObjectId(card))
+    let cursor
+    try {
+      cursor = await cards
+        .find({ _id : { $in : cardsIDs } })
+    } catch (e) {
+      console.error(`Unable to issue find command, ${e}`)
+      return { error: e }
+    }
+
+    try {
+      const cardsList = await cursor.toArray()
+      return { cardsList }
+    } catch (e) {
+      console.error(`Unable to convert cursor to array, ${e}`)
+      return { error: e }
+    }
+  }
+
+  static async editDecks({card_id, deck_id, addingTo, date}){
+    let card = null
+    try {
+      card = await this.getOne(card_id)
+    } catch (e) {
+      console.error(`Deck does not exist: ${e}`)
+      return { error: e }
+    }
+
+    let cardDecks = card.decks
+    // adding card to deck
+    if(addingTo) {
+      if(!cardDecks.includes(deck_id)){
+        cardDecks.push(deck_id)
+      } else {
+        const alreadyExists = `Card already exists in deck`
+        console.error(alreadyExists)
+        return { error: alreadyExists }
+      }
+    } 
+    // removing card from deck
+    else {
+      const index = cardDecks.indexOf(deck_id)
+      if (index > -1) {
+        cardDecks.splice(index, 1)
+      } else {
+        const doesNotExist = `Card does not exist in deck`
+        console.error(doesNotExist)
+        return { error: doesNotExist }
+      }
+    }
+    
+    try {
+      const updateResponse = await cards.updateOne(
+        { _id: ObjectId(card_id)},
+        { $set: { decks: cardDecks, date: date } },
+      )
+      return updateResponse
+    } catch (e) {
+      console.error(`Unable to add/remove deck to/from card: ${e}`)
+      return { error: e }
+    }
+    
+  }
+
 
 }
