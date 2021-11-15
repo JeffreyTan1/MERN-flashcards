@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
-import { editDeck, getDecks } from '../../actions/deckActions'
+import { editDeck, getDeck, getDeckCards, getDecks } from '../../actions/deckActions'
 import Table from '../layout/Table'
+import AddCard from './../cards/AddCard'
 import { editCard, getCard, getCardDecks } from '../../actions/cardActions'
 
 export default function ManageCard() {
@@ -27,6 +28,7 @@ export default function ManageCard() {
         getDecks().then((res) => {
           let deckData = res.data.decks
           deckData = deckData.map(deck => ({...deck, date: formatDate(deck.date)}))
+
           const filtered = deckData.filter(function(el) { 
             let filter = true
             cardDeckData.forEach(element => {
@@ -36,6 +38,8 @@ export default function ManageCard() {
             })
             return filter
           }); 
+
+          console.log(filtered)
           setDecks(filtered)
           
         }).catch((error) => {
@@ -47,8 +51,10 @@ export default function ManageCard() {
     }).catch((error) => {
       console.error(error.message)
     })
+
     
-  }, [id])
+
+  }, [])
 
   const columns = [
     {
@@ -82,6 +88,7 @@ export default function ManageCard() {
       addingTo: false
     }
     editCard(data).then((res) => {
+    console.log(res.data)
     window.location.reload(false);
     }).catch((error) => {
     console.error(error.message)
@@ -95,6 +102,7 @@ export default function ManageCard() {
       addingTo: true,
     }
     editDeck(data).then((res) => {
+      console.log(res.data)
       window.location.reload(false)
     }).catch((error) => {
     console.error(error.message)

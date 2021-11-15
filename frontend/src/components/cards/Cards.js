@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import Table from '../layout/Table';
 import {getCards, deleteCard} from '../../actions/cardActions'
-import { getDecks } from '../../actions/deckActions'
+import { editDeck, getDecks } from '../../actions/deckActions'
 
 function Cards() {
   const [cards, setCards] = useState([])
@@ -90,6 +90,19 @@ function Cards() {
         console.error(error.message)
         })
     }
+  }
+
+  const handleAddCardToDeck = (card_id, deck_id) => {
+    const data = {
+      deck_id: deck_id,
+      card_id: card_id,
+      addingTo: true
+    }
+    editDeck(data).then((res) => {
+    console.log(res.data)
+    }).catch((error) => {
+    console.error(error.message)
+    })
   }
 
   return (

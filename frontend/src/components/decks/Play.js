@@ -31,7 +31,7 @@ export default function Play () {
     }).catch((error) => {
       console.error(error.message)
     })
-  }, [cards?.length, id, questionIndex])
+  }, [])
 
   useEffect(() => {
     setCompletion(Math.floor((questionIndex) / cards?.length * 100))
@@ -83,7 +83,7 @@ export default function Play () {
           :
           (!cards ? 
             <p>Loading... </p>
-            : cards && cards.length !== 0 ?
+            : cards && cards.length != 0 ?
             <div> 
               <PlayCard card={cards[questionIndex]} handleAnswer={handleAnswer}/>
             </div>
