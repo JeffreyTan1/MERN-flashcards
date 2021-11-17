@@ -1,3 +1,5 @@
+@ Jeffrey Tan
+
 # Flashcards App
 
 - Node + Express Backend -> server/
