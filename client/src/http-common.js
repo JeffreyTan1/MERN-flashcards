@@ -3,7 +3,7 @@ import store from './redux/store'
 import user from "./redux/user";
 
 export const API = axios.create({
-  baseURL: "http://localhost:5000/api/v1/",
+  baseURL: "https://flashcardsapp-server.herokuapp.com/api/v1/",
   headers: {
     "Content-type": "application/json"    
   }
