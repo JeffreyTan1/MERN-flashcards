@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useParams } from 'react-router-dom'
-import { editDeck, getDeck, getDeckCards, getDecks } from '../../actions/deckActions'
+import { editDeck, getDecks } from '../../actions/deckActions'
 import Table from '../layout/Table'
-import AddCard from './../cards/AddCard'
 import { editCard, getCard, getCardDecks } from '../../actions/cardActions'
 
 export default function ManageCard() {
@@ -54,7 +53,7 @@ export default function ManageCard() {
 
     
 
-  }, [])
+  }, [id])
 
   const columns = [
     {

@@ -15,6 +15,7 @@ export default function ManageDeck() {
   }
 
   useEffect(() => {
+    console.log(id)
     getDeck(id).then((res) => {
       let data = (res.data.deck)
       data.date = formatDate(data.date)
