@@ -5,7 +5,7 @@ function Landing() {
 
     return (
         <div className="container">
-            <h1>Welcome to flashcards</h1>
+            <h1>Welcome to Flashy</h1>
             <Link 
                 className="btn btn-dark"
                 role="button"
